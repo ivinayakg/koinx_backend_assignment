@@ -34,8 +34,8 @@ if (!MONGODB_URI) {
       },
       {
         collection: CoinInfoModel.collection,
-        keys: { symbol: 1 },
-        options: { unique: true, name: "symbol_coin_info_unique" },
+        keys: { symbol: 1, date: 1 },
+        options: { unique: true, name: "symbol_date_coin_info_unique" },
       },
     ]);
 

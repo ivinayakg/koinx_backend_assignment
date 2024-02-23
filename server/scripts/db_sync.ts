@@ -1,6 +1,6 @@
 import { CoinModel } from "../DB/coin";
 import { CoinInfoModel } from "../DB/coinInfo";
-import { TimeSleep } from "../utils";
+import { DateFromDateTimeString, TimeSleep } from "../utils";
 
 export async function SyncCoins() {
   const totalIterations = 12;
@@ -30,7 +30,8 @@ async function saveCoinsInfo(coinsInfo: any, iteration: number) {
     let bulkOps: any[] = [];
 
     for (let data of coinsInfo) {
-      let filter = { symbol: data.symbol };
+      let date = DateFromDateTimeString(data.last_updated);
+      let filter = { symbol: data.symbol, date: date };
       let update = {
         $set: {
           current_price: data.current_price,
@@ -44,6 +45,7 @@ async function saveCoinsInfo(coinsInfo: any, iteration: number) {
           price_change_percentage_24h: data.price_change_percentage_24h,
           circulating_supply: data.circulating_supply,
           symbol: data.symbol,
+          date: date,
         },
       };
 
