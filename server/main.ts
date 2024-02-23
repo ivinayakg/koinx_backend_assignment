@@ -4,6 +4,8 @@ import Express, {
 } from "express";
 import { CoinInfoModel, CoinModel, DBIndexSetup, DBSetup } from "./DB";
 import dotenv from "dotenv";
+import { RunEveryHour } from "./services";
+import { SyncCoins } from "./scripts";
 
 dotenv.config();
 
@@ -36,6 +38,8 @@ if (!MONGODB_URI) {
         options: { unique: true, name: "symbol_coin_info_unique" },
       },
     ]);
+
+    RunEveryHour(SyncCoins, true);
 
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
