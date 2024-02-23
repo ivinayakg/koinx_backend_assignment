@@ -8,6 +8,7 @@ interface Coin {
   total_supply: number;
   max_supply: number;
   last_updated: Date;
+  coinId: string;
 }
 
 const CoinSchema = new Schema<Coin>(
@@ -17,6 +18,7 @@ const CoinSchema = new Schema<Coin>(
     image: { type: String, required: true },
     total_supply: { type: Number, required: true },
     max_supply: { type: Number, required: true },
+    coinId: { type: String, required: true },
   },
   { timestamps: { updatedAt: "last_updated" } }
 );

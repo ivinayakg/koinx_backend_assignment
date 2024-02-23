@@ -5,7 +5,10 @@ export async function TimeSleep(ms: number) {
 }
 
 export function DateFromDateTimeString(dateTimeString: string) {
-  const date = new Date(dateTimeString);
-  const dateString = date.toISOString().split("T")[0];
-  return dateString;
+  const inputDate = new Date(dateTimeString);
+  const day = String(inputDate.getDate()).padStart(2, '0');
+  const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+  const year = inputDate.getFullYear();
+  const formattedDate = `${day}-${month}-${year}`;
+  return formattedDate;
 }

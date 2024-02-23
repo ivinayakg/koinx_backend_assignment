@@ -14,7 +14,7 @@ export async function SyncCoins() {
 
 async function getAndSaveCoins(iteration: number): Promise<boolean> {
   let page = iteration + 1;
-  console.log(`Iteration ${iteration}`);
+  console.log(`\n\nIteration ${iteration}`);
   const coinData = await getCoins(page);
   if (!coinData || (coinData as any).length === 0) {
     return false;
@@ -65,6 +65,9 @@ async function saveCoinsInfo(coinsInfo: any, iteration: number) {
     console.log(
       `Inserted ${result.upsertedCount} CoinInfo documents in iteration ${iteration}`
     );
+    console.log(
+      `Updated ${result.modifiedCount} CoinInfo documents in iteration ${iteration}`
+    );
   } catch (error) {
     console.error(
       `Error performing bulk write CoinInfo with ${iteration} iteration:`,
@@ -86,6 +89,7 @@ async function saveCoins(coins: any, iteration: number) {
           image: data.image,
           total_supply: data.total_supply,
           max_supply: data.max_supply,
+          coinId: data.id,
         },
       };
 
@@ -104,6 +108,9 @@ async function saveCoins(coins: any, iteration: number) {
 
     console.log(
       `Inserted ${result.upsertedCount} Coin documents in iteration ${iteration}`
+    );
+    console.log(
+      `Updated ${result.modifiedCount} Coin documents in iteration ${iteration}`
     );
   } catch (error) {
     console.error(

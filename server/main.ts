@@ -1,19 +1,54 @@
-import Express, {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-} from "express";
+import Express from "express";
 import { CoinInfoModel, CoinModel, DBIndexSetup, DBSetup } from "./DB";
 import dotenv from "dotenv";
 import { RunEveryHour } from "./services";
 import { SyncCoins } from "./scripts";
+import router from "./routes";
+import bodyParser from "body-parser";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
 const app = Express();
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: true }));
+app.use(router);
 
-app.get("/", (req: ExpressRequest, res: ExpressResponse) => {
-  res.send("Hello World");
-});
+const options = {
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "LogRocket Express API with Swagger",
+      version: "0.1.0",
+      description: "This is a simple koinx backend assignment",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "Vinayak Goyal",
+        email: "vinayak20029@gmail.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+      {
+        url: "/",
+      },
+    ],
+  },
+  apis: ["./routes/*.ts"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 
 const MONGODB_URI = process.env.MONGODB_URL;
 if (!MONGODB_URI) {
@@ -39,7 +74,7 @@ if (!MONGODB_URI) {
       },
     ]);
 
-    RunEveryHour(SyncCoins, true);
+    // RunEveryHour(SyncCoins, true);
 
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
