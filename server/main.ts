@@ -2,7 +2,7 @@ import Express, {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from "express";
-import { DBSetup } from "./DB";
+import { CoinInfoModel, CoinModel, DBIndexSetup, DBSetup } from "./DB";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -22,6 +22,20 @@ if (!MONGODB_URI) {
   try {
     await DBSetup(MONGODB_URI);
     console.log("Connected to the database");
+
+    // Setup indexes
+    await DBIndexSetup([
+      {
+        collection: CoinModel.collection,
+        keys: { symbol: 1 },
+        options: { unique: true, name: "symbol_coin_unique" },
+      },
+      {
+        collection: CoinInfoModel.collection,
+        keys: { symbol: 1 },
+        options: { unique: true, name: "symbol_coin_info_unique" },
+      },
+    ]);
 
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
