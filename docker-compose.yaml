@@ -1,0 +1,8 @@
+name: "koinx_assignment"
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: koinx_assignment_mongo
+    ports:
+      - "27017:27017"
