@@ -68,6 +68,8 @@ if (!MONGODB_URI) {
   throw new Error("MONGODB_URL is not defined");
 }
 
+const PORT = process.env.PORT || 3000;
+
 (async () => {
   try {
     await DBSetup(MONGODB_URI);
@@ -89,8 +91,8 @@ if (!MONGODB_URI) {
 
     RunEveryHour(SyncCoins, true);
 
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
     console.log("Error while connecting to the database", error);
