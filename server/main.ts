@@ -4,9 +4,10 @@ import dotenv from "dotenv";
 import { RunEveryHour } from "./services";
 import { SyncCoins } from "./scripts";
 import router from "./routes";
-import bodyParser from "body-parser";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import rateLimit from "express-rate-limit";
+import cors from "cors";
 
 dotenv.config();
 
@@ -14,6 +15,17 @@ const app = Express();
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 app.use(router);
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN?.split(","),
+  methods: ["GET", "POST", "OPTIONS"],
+};
+app.use(cors(corsOptions));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
 
 const options = {
   definition: {
@@ -49,6 +61,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true })
 );
+app.use(limiter);
 
 const MONGODB_URI = process.env.MONGODB_URL;
 if (!MONGODB_URI) {
@@ -74,7 +87,7 @@ if (!MONGODB_URI) {
       },
     ]);
 
-    // RunEveryHour(SyncCoins, true);
+    RunEveryHour(SyncCoins, true);
 
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
