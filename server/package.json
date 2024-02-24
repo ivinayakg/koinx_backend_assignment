@@ -25,7 +25,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "start": "ts-node main.ts",
+    "start": "node main.ts",
     "dev": "nodemon main.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
