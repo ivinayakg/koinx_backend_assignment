@@ -58,6 +58,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true })
 );
+app.set('trust proxy', 1);
 app.use(limiter);
 
 const MONGODB_URI = process.env.MONGODB_URL;
